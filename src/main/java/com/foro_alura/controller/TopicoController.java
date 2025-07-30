@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/topicos")
@@ -40,6 +41,13 @@ public class TopicoController {
         Page<TopicoResponseDTO> topicosPaginadosDTO = topicos.map(TopicoResponseDTO::new);
 
         return ResponseEntity.ok(topicosPaginadosDTO);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TopicoResponseDTO> detallarTopico(@PathVariable Long id) {
+        TopicoResponseDTO topicoResponseDTO = topicoService.detallarTopico(id);
+
+        return ResponseEntity.ok(topicoResponseDTO);
     }
 
 }

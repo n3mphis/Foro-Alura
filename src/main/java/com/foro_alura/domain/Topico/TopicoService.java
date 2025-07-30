@@ -4,10 +4,11 @@ import com.foro_alura.domain.Curso.Curso;
 import com.foro_alura.domain.Curso.CursoRepository;
 import com.foro_alura.domain.Usuario.Usuario;
 import com.foro_alura.domain.Usuario.UsuarioRepository;
+import com.foro_alura.domain.ValidacionException;
+import com.foro_alura.infra.errores.TratadorDeErrores;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,5 +51,12 @@ public class TopicoService {
 
     public Optional<Topico> buscarTopicoPorTitulo(String titulo) {
         return topicoRepository.findByTitulo(titulo);
+    }
+
+    public TopicoResponseDTO detallarTopico(Long id) {
+        Topico topico = topicoRepository.findById(id)
+                .orElseThrow(() -> new ValidacionException("Tópico con ID " + id + " no encontrado"));
+
+        return new TopicoResponseDTO(topico);
     }
 }
