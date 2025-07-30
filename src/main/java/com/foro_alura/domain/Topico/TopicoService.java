@@ -5,12 +5,10 @@ import com.foro_alura.domain.Curso.CursoRepository;
 import com.foro_alura.domain.Usuario.Usuario;
 import com.foro_alura.domain.Usuario.UsuarioRepository;
 import com.foro_alura.domain.ValidacionException;
-import com.foro_alura.infra.errores.TratadorDeErrores;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -26,7 +24,6 @@ public class TopicoService {
     private CursoRepository cursoRepository;
 
 
-    @Transactional
     public TopicoResponseDTO crearTopico(TopicoRequestDTO datos) {
         Usuario autor = usuarioRepository.findById(datos.autorId())
                 .orElseThrow(() -> new IllegalArgumentException("Autor no encontrado con id " + datos.autorId()));
@@ -56,6 +53,15 @@ public class TopicoService {
     public TopicoResponseDTO detallarTopico(Long id) {
         Topico topico = topicoRepository.findById(id)
                 .orElseThrow(() -> new ValidacionException("Tópico con ID " + id + " no encontrado"));
+
+        return new TopicoResponseDTO(topico);
+    }
+
+    public TopicoResponseDTO actualizarTopico(Long id, TopicoActualizarDTO datos) {
+        Topico topico = topicoRepository.findById(id)
+                .orElseThrow(() -> new ValidacionException("El id proporcionado en la URL no coincide con el ID en el cuerpo de la solicitud"));
+
+        topico.actualizarTopico(datos.titulo(), datos.mensaje());
 
         return new TopicoResponseDTO(topico);
     }

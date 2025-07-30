@@ -54,4 +54,14 @@ public class Topico {
         this.fechaCreacion = LocalDateTime.now();
         this.statusTopico = StatusTopico.ABIERTO;
     }
+
+    public void actualizarTopico(String titulo, String mensaje) {
+        if (titulo != null && !titulo.isBlank()) {
+            this.titulo = titulo;
+        }
+
+        if (mensaje != null && !mensaje.isBlank()) {
+            this.mensaje = mensaje;
+        }
+    }
 }

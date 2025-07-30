@@ -1,20 +1,18 @@
 package com.foro_alura.controller;
 
-import com.foro_alura.domain.Topico.Topico;
-import com.foro_alura.domain.Topico.TopicoRequestDTO;
-import com.foro_alura.domain.Topico.TopicoResponseDTO;
-import com.foro_alura.domain.Topico.TopicoService;
+import com.foro_alura.domain.Topico.*;
+import com.foro_alura.domain.ValidacionException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/topicos")
@@ -22,6 +20,9 @@ public class TopicoController {
 
     @Autowired
     private TopicoService topicoService;
+
+    @Autowired
+    private TopicoRepository topicoRepository;
 
     @PostMapping
     public ResponseEntity<TopicoResponseDTO> registrarTopico(
@@ -48,6 +49,22 @@ public class TopicoController {
         TopicoResponseDTO topicoResponseDTO = topicoService.detallarTopico(id);
 
         return ResponseEntity.ok(topicoResponseDTO);
+    }
+
+    @Transactional
+    @PutMapping("/{id}")
+    public ResponseEntity<TopicoResponseDTO> actualizarTopico(@PathVariable Long id, @RequestBody @Valid TopicoActualizarDTO topicoActualizarDTO) {
+        TopicoResponseDTO actualizado = topicoService.actualizarTopico(id, topicoActualizarDTO);
+
+        return ResponseEntity.ok(actualizado);
+    }
+
+    @Transactional
+    @DeleteMapping("/{id}")
+    public ResponseEntity<TopicoResponseDTO> eliminarTopico(@PathVariable Long id) {
+        topicoRepository.deleteById(id);
+
+        return ResponseEntity.noContent().build();
     }
 
 }
