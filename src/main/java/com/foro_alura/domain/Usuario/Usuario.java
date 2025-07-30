@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(of = "id")
 
 @Entity(name = "Usuario")
-@Table(name = "usarios")
+@Table(name = "usuarios")
 public class Usuario implements UserDetails {
 
     @Id

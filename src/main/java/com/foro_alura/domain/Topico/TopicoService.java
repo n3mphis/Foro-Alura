@@ -4,43 +4,40 @@ import com.foro_alura.domain.Curso.Curso;
 import com.foro_alura.domain.Curso.CursoRepository;
 import com.foro_alura.domain.Usuario.Usuario;
 import com.foro_alura.domain.Usuario.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
 public class TopicoService {
-    private final TopicoRepository topicoRepository;
-    private final UsuarioRepository usuarioRepository;
-    private final CursoRepository cursoRepository;
+    @Autowired
+    private TopicoRepository topicoRepository;
 
-    public TopicoService(TopicoRepository topicoRepository, UsuarioRepository usuarioRepository, CursoRepository cursoRepository) {
-        this.topicoRepository = topicoRepository;
-        this.usuarioRepository = usuarioRepository;
-        this.cursoRepository = cursoRepository;
-    }
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
-    public Topico crearTopico(TopicoRequestDTO datos) {
+    @Autowired
+    private CursoRepository cursoRepository;
+
+
+    @Transactional
+    public TopicoResponseDTO crearTopico(TopicoRequestDTO datos) {
         Usuario autor = usuarioRepository.findById(datos.autorId())
                 .orElseThrow(() -> new IllegalArgumentException("Autor no encontrado con id " + datos.autorId()));
 
         Curso curso = cursoRepository.findById(datos.cursoId())
                 .orElseThrow(() -> new IllegalArgumentException("Curso no encontrado con id " + datos.cursoId()));
 
-        Topico topico = new Topico(
-                null,
-                datos.titulo(),
-                datos.mensaje(),
-                LocalDateTime.now(),
-                StatusTopico.NO_RESPONDIDO,
-                autor,
-                curso
-        );
+        Topico topico = new Topico(datos.titulo(), datos.mensaje(), autor, curso);
 
-        return topicoRepository.save(topico);
+        topicoRepository.save(topico);
+
+        return new TopicoResponseDTO(topico);
     }
 
     public Page<Topico> listarTopicos(Pageable paginacion) {

@@ -4,20 +4,17 @@ import com.foro_alura.domain.Curso.Curso;
 import com.foro_alura.domain.Respuesta.Respuesta;
 import com.foro_alura.domain.Usuario.Usuario;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 
 @Entity(name = "Topico")
@@ -30,22 +27,31 @@ public class Topico {
 
     private String titulo;
     private String mensaje;
+
+    @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
 
     @Enumerated(EnumType.STRING)
-    private StatusTopico statusTopico;
+    @Column(name = "status_topico")
+    private StatusTopico statusTopico;       // por default
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "autor_id")
+    @JoinColumn(name = "autor_id", nullable = false)
     private Usuario autor;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "curso_id")
+    @JoinColumn(name = "curso_id", nullable = false)
     private Curso curso;
 
     @OneToMany(mappedBy = "topico")
     private List<Respuesta> respuestas;
 
-    public Topico(Object o, @NotBlank(message = "El titulo no puede estar en blanco") @Size(min = 5, max = 255, message = "El titulo debe tener entre 5 y 255 caracteres") String titulo, @NotBlank(message = "El mensaje no puede estar en blanco") String mensaje, LocalDateTime now, StatusTopico statusTopico, Usuario autor, Curso curso) {
+    public Topico(String titulo, String mensaje, Usuario autor, Curso curso) {
+        this.titulo = titulo;
+        this.mensaje = mensaje;
+        this.autor = autor;
+        this.curso = curso;
+        this.fechaCreacion = LocalDateTime.now();
+        this.statusTopico = StatusTopico.ABIERTO;
     }
 }

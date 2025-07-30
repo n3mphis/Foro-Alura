@@ -20,4 +20,8 @@ public record TopicoResponseDTO(Long id,
                 topico.getCurso().getNombre(),
                 String.valueOf(topico.getCurso().getCategoria()));
     }
+
+    public Object getId() {
+        return id;
+    }
 }

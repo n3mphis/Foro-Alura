@@ -3,7 +3,7 @@ CREATE TABLE topicos(
     titulo VARCHAR(255) NOT NULL UNIQUE,
     mensaje TEXT NOT NULL,
     fecha_creacion DATETIME NOT NULL,
-    status TINYINT(1) NOT NULL,
+    status_topico VARCHAR(50) NOT NULL,
     autor_id BIGINT NOT NULL,
     curso_id BIGINT NOT NULL,
 

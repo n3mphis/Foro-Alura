@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 
-@Table(name = "Curso")
-@Entity(name = "cursos")
+@Table(name = "cursos")
+@Entity(name = "Curso")
 public class Curso {
 
     @Id
